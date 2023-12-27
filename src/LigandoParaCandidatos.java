@@ -1,101 +1,64 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LigandoParaCandidatos {
+    
     public static void main(String[] args) {
 
-        //se o metodo analisandoCandidatos() fosse somente public void, então
-        // eu precisaria criar um objeto dele aqui para poder usalo
-        // segue exemplo:
-        /*
-        LigandoParaCandidatos Myobj = new LigandoParaCandidatos();
-        Myobj.analisandoCandidatos();
-        */
-        
-        analisandoCandidatos();
-        ligarParaCandidatos(analisandoCandidatos());
+        LigandoParaCandidatos analisar = new LigandoParaCandidatos();
+        ArrayList<String> analisando = analisar.analisarCandidatos();
+       
+        LigandoParaCandidatos ligar = new LigandoParaCandidatos();
+        ligar.ligarParaCandidatos(analisando);
     }
 
+    public ArrayList<String> analisarCandidatos(){
 
-    //mudei esse metodo de void para ArrayList
-    //e retornei os valores selecionados dentro do array candidatosSelecionados
-    //na chamada do metodo ligar para candidatos selecioados
-    //eu so passo o array candidatosSelecionados como parametro.
-
-    //Aqui se eu definir esse metodo como public void
-    // então eu preciso criar um objeto dele la na classe main para poder acessalo
-    public static ArrayList<String> analisandoCandidatos(){
-
-        String [] candidatos = {"Ana", "Hugo", "Bete", "Jonas", "Vicente", "Damiania", "Damares", "Prego"};
-        double salarioBase = 2000.00;
         
-        int candidatoAtual = 0;
-
-        int totalCandidatosSelecionados = 0;
-
-        ArrayList<String> candidatosSelecionados = new ArrayList<>();
-
-        do{
-
-            int salarioPretendido = valorAleatorio();
-            System.out.println(candidatos[candidatoAtual] + " solicitou R$" + salarioPretendido);
-            
-            if(salarioPretendido > salarioBase){
-                System.out.println("Aguardando resposta dos demais candidatos");
-            } else if (salarioPretendido == salarioBase){
-                System.out.println("Ligar para o candidato com contraproposta ");
-            } else {
-                System.out.println(candidatos[candidatoAtual] + " foi selecionado para vaga");
-                candidatosSelecionados.add(candidatos[candidatoAtual]);
-                totalCandidatosSelecionados++;
-            } 
-            candidatoAtual++;
-            
-        } while (candidatoAtual < candidatos.length);
-            System.out.println("Total candidatos selecionados : " + totalCandidatosSelecionados);
-            System.out.println("Candidatos selecionados: " + candidatosSelecionados);
-            System.out.println("FIM");
-
-            return candidatosSelecionados;
-
-    }
-
-
-    public static void ligarParaCandidatos(ArrayList<String> candidatos){
+        String [] candidatos = {"Hugo", "beto", "Vicente", "Betina", "Mormom"};
+        int salarioBase = 2000;
+        ArrayList<String> candidatoSelecionados = new ArrayList<>();
 
         for(String candidato : candidatos){
-            tentativaLigacao();
-            int ligacoesFeitas = 1;
-            boolean continuarLigando = true;
-            boolean atendeu = false;
-
-            do{
-                atendeu = tentativaLigacao();
-                continuarLigando = !atendeu;
-
-                if(continuarLigando){
-                ligacoesFeitas++;
-       }     else {
-                System.out.println("Conseguimos contato com " + candidato);
+            int salarioPretendido = valorAleatorio();
+            String mensagem = String.format("%s solicitou %d",candidato, salarioPretendido);
+            if(salarioPretendido > salarioBase){
+                System.out.println(mensagem + " aguardando resposta dos demais candidatos");
+            } else if (salarioPretendido == salarioBase) {
+                System.out.println(mensagem + " ligar para candidato com contraproposta");
+            } else {
+                System.out.println(mensagem + " e foi selecionado para a vaga");
+                candidatoSelecionados.add(candidato);
             }
-        } while(continuarLigando && ligacoesFeitas <3);
-
-        if(atendeu){
-        System.out.println("Conseguimos ligar para " + candidato + " na " + ligacoesFeitas + "° tentativa ");
-        } else {
-        System.out.println("Tentamos ligar para " + candidato + " " + ligacoesFeitas + " vezes, mas não fomos atendidos" );
         }
+
+        System.out.println("Total candidatos selecionados: " + candidatoSelecionados.size());
+        System.out.println("Candidatos selecionados: " + candidatoSelecionados);
+
+        return candidatoSelecionados;
+    }
+    
+    public void ligarParaCandidatos(ArrayList<String> candidatosSelecionados){
+
+        for(String candidato : candidatosSelecionados){
+            int totalTentativas = 1;
+            
+            while(totalTentativas < 3 && !resultadoLigacao()){
+            
+                    totalTentativas++;
+                }
+            
+            System.out.println( totalTentativas < 3 ? candidato + " nos atendeu na " + totalTentativas + "° tentativa" : candidato + " não nos atendeu");
         }
 }
 
-    public static int valorAleatorio (){
-        int valorGerado = ThreadLocalRandom.current().nextInt(1800,2100);
-        return valorGerado;
+
+    public boolean resultadoLigacao(){
+        return ThreadLocalRandom.current().nextInt(3)==1;
     }
 
-    static boolean tentativaLigacao(){
-        return new Random().nextInt(3)==1;
+    public int valorAleatorio(){
+        return ThreadLocalRandom.current().nextInt(1800,2150);
     }
 
 }

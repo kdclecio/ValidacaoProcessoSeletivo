@@ -32,7 +32,7 @@ public class AnalisandoCandidatos {
             
         }
         System.out.println("Total candidatos selecionados: " + totalCandidatosSelecionados);
-        System.out.println("Candidatos selecionados: " + ca);
+        System.out.println("Candidatos selecionados: " + candidatosSelecionados);
     }
 
     static int valorAleatorio(){
